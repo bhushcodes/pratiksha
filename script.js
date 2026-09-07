@@ -50,7 +50,7 @@
     }
 
     function setupSilentAutoPlay() {
-      const events = ["click", "pointerdown", "touchstart", "keydown", "wheel", "scroll"];
+      const events = ["click", "pointerdown", "touchstart", "touchend", "keydown", "wheel", "scroll"];
       
       function onFirstAction() {
         localAudio.play()
@@ -127,7 +127,10 @@
     let currentParallaxY = 0;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const PARTICLE_COUNT = Math.min(50, Math.floor((width * height) / 30000));
+    const isMobile = window.innerWidth <= 640;
+    const PARTICLE_COUNT = isMobile
+      ? Math.min(20, Math.floor((width * height) / 45000))
+      : Math.min(48, Math.floor((width * height) / 30000));
     const particles = [];
 
     class StarParticle {
@@ -185,9 +188,14 @@
     let targetGlowX = glowX;
     let targetGlowY = glowY;
 
-    window.addEventListener("resize", () => {
+    function handleResize() {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("orientationchange", () => {
+      setTimeout(handleResize, 150);
     }, { passive: true });
 
     window.addEventListener("pointermove", (e) => {

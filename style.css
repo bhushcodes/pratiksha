@@ -1,6 +1,6 @@
 /* ==========================================================================
    AETHERIA — QUIET DIGITAL POETRY ROOM
-   Atmospheric, Dark Cinematic Styling (Pure CSS — No Backend, No Admin)
+   Atmospheric, Dark Cinematic Styling (Pure CSS — Mobile Optimized)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -69,23 +69,8 @@ body.theme-amber {
   --blob-3: rgba(35, 15, 8, 0.5);
 }
 
-/* Atmospheric Theme: Emerald Deep Forest */
-body.theme-forest {
-  --bg-primary: #060907;
-  --bg-surface: rgba(12, 20, 15, 0.75);
-  --bg-surface-hover: rgba(18, 30, 22, 0.85);
-  --text-primary: #eaf3ec;
-  --text-secondary: #8ba994;
-  --accent-glow: rgba(90, 185, 130, 0.22);
-  --accent-color: #8ccba2;
-  --accent-subtle: rgba(140, 203, 162, 0.12);
-  --blob-1: rgba(16, 45, 28, 0.45);
-  --blob-2: rgba(10, 35, 20, 0.4);
-  --blob-3: rgba(8, 26, 15, 0.5);
-}
-
 /* --------------------------------------------------------------------------
-   2. Reset & Base Styles
+   2. Reset & Base Styles (Mobile First & Safe Area Aware)
    -------------------------------------------------------------------------- */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -96,12 +81,15 @@ body.theme-forest {
 html, body {
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for modern mobile browsers */
   overflow-x: hidden;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%; /* Prevent automatic font scaling on orientation change */
+  touch-action: manipulation;
   transition: background-color 0.8s ease, color 0.8s ease;
 }
 
@@ -249,17 +237,18 @@ body.cursor-active .cursor-glow {
 }
 
 /* --------------------------------------------------------------------------
-   4. Application Layout
+   4. Application Layout (Safe Area Aware)
    -------------------------------------------------------------------------- */
 .app-layout {
   position: relative;
   z-index: 10;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1.5rem 3rem;
+  padding: max(1.75rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(2rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -276,14 +265,16 @@ body.cursor-active .cursor-glow {
   width: 100%;
   max-width: 860px;
   margin: 0 auto;
-  padding: 1.5rem 0 3rem;
+  padding: 1.5rem 0;
 }
 
 .poem-container {
   width: 100%;
+  max-width: 100%;
   text-align: center;
   outline: none;
   animation: poemFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  padding: 0 0.5rem;
 }
 
 @keyframes poemFadeIn {
@@ -320,25 +311,30 @@ body.cursor-active .cursor-glow {
 
 .poem-title {
   font-family: var(--font-devanagari-title), var(--font-serif);
-  font-size: clamp(2.2rem, 5.2vw, 3.6rem);
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
   font-weight: 500;
   line-height: 1.35;
   color: var(--text-primary);
   margin-bottom: 2rem;
   letter-spacing: -0.01em;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* Poem Stanzas & Body */
 .poem-body {
   font-family: var(--font-devanagari-body), var(--font-serif);
-  font-size: clamp(1.2rem, 2.5vw, 1.52rem);
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
   line-height: 2.2;
   color: var(--text-primary);
   letter-spacing: 0.015em;
   max-width: 640px;
   margin: 0 auto;
   text-align: center;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .poem-stanza {
@@ -352,6 +348,7 @@ body.cursor-active .cursor-glow {
 .poem-line {
   display: block;
   min-height: 1.5em;
+  white-space: normal;
 }
 
 .poem-footer-ornament {
@@ -379,40 +376,126 @@ body.cursor-active .cursor-glow {
 }
 
 /* --------------------------------------------------------------------------
-   8. Responsive Design
+   7. Responsive Design (Tablets, Phones & Landscape)
    -------------------------------------------------------------------------- */
 @media (max-width: 820px) {
   .app-layout {
-    padding: 1.2rem 1.2rem 2rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .app-layout {
-    padding: 1rem 1rem 1.5rem;
+    padding: max(1.5rem, env(safe-area-inset-top)) max(1.2rem, env(safe-area-inset-right)) max(1.8rem, env(safe-area-inset-bottom)) max(1.2rem, env(safe-area-inset-left));
   }
 
   .poem-stage {
-    padding: 1rem 0 2rem;
+    padding: 1rem 0;
+  }
+}
+
+/* Standard Mobile Devices (iPhone 12-16, Pixel, Galaxy, etc.) */
+@media (max-width: 640px) {
+  .app-layout {
+    padding: max(1.2rem, env(safe-area-inset-top)) max(0.9rem, env(safe-area-inset-right)) max(1.6rem, env(safe-area-inset-bottom)) max(0.9rem, env(safe-area-inset-left));
+  }
+
+  .poem-stage {
+    padding: 0.6rem 0 1.2rem;
+  }
+
+  .poem-ornament {
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ornament-line {
+    width: 32px;
   }
 
   .poem-title {
-    font-size: 1.95rem;
-    margin-bottom: 1.6rem;
+    font-size: clamp(1.75rem, 7.8vw, 2.3rem);
+    margin-bottom: 1.4rem;
+    line-height: 1.35;
   }
 
   .poem-body {
-    font-size: 1.12rem;
+    font-size: clamp(1.08rem, 4.4vw, 1.25rem);
+    line-height: 2.1;
+    padding: 0 0.25rem;
+  }
+
+  .poem-stanza {
+    margin-bottom: 1.75rem;
+  }
+
+  .poem-line {
+    min-height: 1.6em;
+  }
+
+  .poem-footer-ornament {
+    margin-top: 1.8rem;
+    font-size: 1rem;
+  }
+
+  /* Optimize GPU memory & performance on mobile devices */
+  .ambient-blobs {
+    filter: blur(55px);
+    opacity: 0.75;
+  }
+}
+
+/* Small Screen Smartphones (iPhone SE, Galaxy A-series, etc.) */
+@media (max-width: 380px) {
+  .poem-title {
+    font-size: 1.55rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .poem-body {
+    font-size: 1.02rem;
     line-height: 2;
   }
 
   .poem-stanza {
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .ornament-line {
+    width: 22px;
+  }
+}
+
+/* Short Vertical Height / Mobile Landscape */
+@media (max-height: 520px) and (orientation: landscape) {
+  .app-layout {
+    min-height: auto;
+    padding: max(0.8rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+  }
+
+  .poem-stage {
+    padding: 0.4rem 0;
+  }
+
+  .poem-ornament {
+    margin-bottom: 0.75rem;
+  }
+
+  .poem-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .poem-body {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .poem-stanza {
+    margin-bottom: 1rem;
+  }
+
+  .poem-footer-ornament {
+    margin-top: 1rem;
   }
 }
 
 /* --------------------------------------------------------------------------
-   9. Accessibility & Reduced Motion
+   8. Accessibility & Reduced Motion
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
