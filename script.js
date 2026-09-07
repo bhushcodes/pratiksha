@@ -16,7 +16,6 @@
 
   function initContinuousBackgroundAudio() {
     const localAudio = document.getElementById("local-audio");
-    const unlockHint = document.getElementById("audio-unlock-hint");
     if (!localAudio) return;
 
     localAudio.loop = true;
@@ -42,42 +41,34 @@
     function tryPlayAudio() {
       const playPromise = localAudio.play();
       if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            if (unlockHint) unlockHint.hidden = true;
-          })
-          .catch(() => {
-            // Autoplay restricted by browser policy -> show gentle unlock hint
-            if (unlockHint) unlockHint.hidden = false;
-            setupInteractionUnlock();
-          });
+        playPromise.catch(() => {
+          // If browser restricts unprompted autoplay before interaction,
+          // start silently on the first natural user action without displaying any prompt or UI
+          setupSilentAutoPlay();
+        });
       }
     }
 
-    function setupInteractionUnlock() {
-      function triggerUnlock() {
+    function setupSilentAutoPlay() {
+      const events = ["click", "pointerdown", "touchstart", "keydown", "wheel", "scroll"];
+      
+      function onFirstAction() {
         localAudio.play()
-          .then(() => {
-            if (unlockHint) unlockHint.hidden = true;
-            removeUnlockListeners();
-          })
+          .then(() => removeSilentListeners())
           .catch(() => {});
       }
 
-      const events = ["click", "pointerdown", "mousedown", "touchstart", "touchend", "keydown", "scroll"];
-      events.forEach((evt) => {
-        window.addEventListener(evt, triggerUnlock, { capture: true, passive: true });
-        document.addEventListener(evt, triggerUnlock, { capture: true, passive: true });
-      });
-
-      unlockHint?.addEventListener("click", triggerUnlock);
-
-      function removeUnlockListeners() {
+      function removeSilentListeners() {
         events.forEach((evt) => {
-          window.removeEventListener(evt, triggerUnlock, { capture: true });
-          document.removeEventListener(evt, triggerUnlock, { capture: true });
+          window.removeEventListener(evt, onFirstAction, { capture: true });
+          document.removeEventListener(evt, onFirstAction, { capture: true });
         });
       }
+
+      events.forEach((evt) => {
+        window.addEventListener(evt, onFirstAction, { capture: true, passive: true });
+        document.addEventListener(evt, onFirstAction, { capture: true, passive: true });
+      });
     }
 
     // Always-on loop protection: if anything pauses, immediately resume

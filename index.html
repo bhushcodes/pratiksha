@@ -75,12 +75,7 @@
   </div> <!-- End .app-layout -->
 
   <!-- Local Audio File in Folder (Always On & Looping) -->
-  <audio id="local-audio" src="song.mp3" autoplay loop preload="auto"></audio>
-
-  <!-- Autoplay Security Guard: Subtle Unlock Hint if Browser Restricts Sound -->
-  <div id="audio-unlock-hint" class="audio-unlock-hint" hidden role="button" aria-label="Enable ambient sound">
-    <span>♪ Click anywhere to enable ambient music</span>
-  </div>
+  <audio id="local-audio" src="song.mp3" autoplay loop preload="auto" playsinline></audio>
 
   <script src="script.js"></script>
 </body>
