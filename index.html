@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Poetry Sanctuary</title>
+  <meta name="description" content="A quiet digital sanctuary where timeless poetry meets ambient music and cinematic atmosphere.">
+  <meta name="theme-color" content="#07080c">
+  
+  <!-- Google Fonts: Cormorant Garamond (Poem Serif) & Plus Jakarta Sans (Clean UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-midnight">
+
+  <!-- SVG Noise Filter (Tactile film grain) -->
+  <svg class="svg-defs" aria-hidden="true">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.05 0"/>
+    </filter>
+  </svg>
+
+  <!-- Atmospheric Background Elements -->
+  <div id="ambient-canvas-container" class="ambient-canvas-container" aria-hidden="true">
+    <canvas id="ambient-canvas"></canvas>
+  </div>
+
+  <div id="ambient-blobs" class="ambient-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="vignette-overlay" aria-hidden="true"></div>
+  <div class="grain-overlay" aria-hidden="true"></div>
+  <div id="cursor-glow" class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- App Wrapper -->
+  <div class="app-layout">
+    
+    <!-- Center Stage: Poem Room -->
+    <main class="poem-stage">
+      <article id="poem-container" class="poem-container" tabindex="0" aria-live="polite">
+        <div class="poem-ornament" aria-hidden="true">
+          <span class="ornament-line"></span>
+          <span class="ornament-gem">✦</span>
+          <span class="ornament-line"></span>
+        </div>
+        
+        <h1 id="poem-title" class="poem-title"></h1>
+        <p id="poem-author" class="poem-author"></p>
+        
+        <div id="poem-body" class="poem-body">
+          <!-- Stanzas rendered dynamically -->
+        </div>
+
+        <div class="poem-footer-ornament" aria-hidden="true">
+          <span>❦</span>
+        </div>
+      </article>
+    </main>
+
+  </div> <!-- End .app-layout -->
+
+  <!-- Local Audio File in Folder (Always On & Looping) -->
+  <audio id="local-audio" src="song.mp3" autoplay loop preload="auto"></audio>
+
+  <!-- Autoplay Security Guard: Subtle Unlock Hint if Browser Restricts Sound -->
+  <div id="audio-unlock-hint" class="audio-unlock-hint" hidden role="button" aria-label="Enable ambient sound">
+    <span>♪ Click anywhere to enable ambient music</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
